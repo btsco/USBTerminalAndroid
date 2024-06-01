@@ -1,5 +1,6 @@
 package de.kai_morich.simple_usb_terminal;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
@@ -81,7 +82,7 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        setRetainInstance(true);
+        //setRetainInstance(true);
         deviceId = getArguments().getInt("device");
         portNum = getArguments().getInt("port");
         baudRate = getArguments().getInt("baud");
@@ -270,7 +271,7 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
         usbSerialPort = driver.getPorts().get(portNum);
         UsbDeviceConnection usbConnection = usbManager.openDevice(driver.getDevice());
         if(usbConnection == null && permissionGranted == null && !usbManager.hasPermission(driver.getDevice())) {
-            PendingIntent usbPermissionIntent = PendingIntent.getBroadcast(getActivity(), 0, new Intent(Constants.INTENT_ACTION_GRANT_USB), 0);
+            @SuppressLint("UnspecifiedImmutableFlag") PendingIntent usbPermissionIntent = PendingIntent.getBroadcast(getActivity(), 0, new Intent(Constants.INTENT_ACTION_GRANT_USB), 0);
             usbManager.requestPermission(driver.getDevice(), usbPermissionIntent);
             return;
         }
@@ -402,7 +403,7 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
 
     @Override
     public void onSerialIoError(Exception e) {
-        status("connection lost: " + e.getMessage());
+        status("Connection lost: " + e.getMessage());
         disconnect();
     }
 
